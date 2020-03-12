@@ -1,6 +1,7 @@
 package com.hansol.restfulwebservice.event.controller;
 
 import com.hansol.restfulwebservice.event.Event;
+import com.hansol.restfulwebservice.event.repository.EventRepository;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,11 +18,16 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @RequestMapping(value = "/api/events", produces = MediaTypes.HAL_JSON_UTF8_VALUE)
 public class EventController {
 
+    private final EventRepository eventRepository;
+
+    public EventController(EventRepository eventRepository) {
+        this.eventRepository = eventRepository;
+    }
+
     @PostMapping
     public ResponseEntity createEvent(@RequestBody Event event) {
-
+        Event newEvent = this.eventRepository.save(event);
         URI createUri = linkTo(EventController.class).slash("{id}").toUri();
-        event.setId(10);
         return ResponseEntity.created(createUri).body(event);
     }
 }

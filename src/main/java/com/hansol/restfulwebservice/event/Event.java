@@ -2,12 +2,16 @@ package com.hansol.restfulwebservice.event;
 
 import lombok.*;
 
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.time.LocalDateTime;
 
 @Getter @Setter
 @Builder
 @AllArgsConstructor @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
+@Entity
 public class Event {
 
     private Integer id;
@@ -25,6 +29,8 @@ public class Event {
 
     private boolean offline;
     private boolean free;
+
+    @Enumerated(EnumType.STRING)
     private EventStatus eventStatus;
 
 }
