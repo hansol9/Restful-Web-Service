@@ -1,9 +1,13 @@
 package com.hansol.restfulwebservice.event;
 
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@RunWith(JUnitParamsRunner.class)
 public class EventTest {
 
     @Test
@@ -33,65 +37,55 @@ public class EventTest {
     }
 
     @Test
-    public void testFree() {
+//    @Parameters({
+//            "0, 0, true",
+//            "100, 0, false",
+//            "0, 100, false"
+//    })
+    @Parameters(method="paramsForTestFree")
+    public void testFree(int basePrice, int maxPrice, boolean isFree) {
         // Given
         Event event = Event.builder()
-                .basePrice(0)
-                .maxPrice(0)
+                .basePrice(basePrice)
+                .maxPrice(maxPrice)
                 .build();
 
         // When
         event.update();
 
         // Then
-        assertThat(event.isFree()).isTrue();
+        assertThat(event.isFree()).isEqualTo(isFree);
+    }
 
-        // Given
-        event = Event.builder()
-                .basePrice(100)
-                .maxPrice(0)
-                .build();
-
-        // When
-        event.update();
-
-        // Then
-        assertThat(event.isFree()).isFalse();
-
-        // Given
-        event = Event.builder()
-                .basePrice(0)
-                .maxPrice(100)
-                .build();
-
-        // When
-        event.update();
-
-        // Then
-        assertThat(event.isFree()).isFalse();
+    private Object[] paramsForTestFree() {
+        return new Object[] {
+                new Object[] { 0, 0, true},
+                new Object[] { 100, 0, false},
+                new Object[] { 0, 100, false}
+        };
     }
 
     @Test
-    public void testOffline() {
+    @Parameters(method = "parametersForTestOffline")
+    public void testOffline(String location, boolean isOffline) {
         // Given
         Event event = Event.builder()
-                .location("Conestoga College")
+                .location(location)
                 .build();
 
         // When
         event.update();
 
         // Then
-        assertThat(event.isOffline()).isTrue();
+        assertThat(event.isOffline()).isEqualTo(isOffline);
 
-        // Given
-        event = Event.builder()
-                .build();
+    }
 
-        // When
-        event.update();
-
-        // Then
-        assertThat(event.isOffline()).isFalse();
+    private Object[] parametersForTestOffline() {
+        return new Object[] {
+                new Object[] {"Conestoga College", true},
+                new Object[] {null, false},
+                new Object[] {" ", false}
+        };
     }
 }
