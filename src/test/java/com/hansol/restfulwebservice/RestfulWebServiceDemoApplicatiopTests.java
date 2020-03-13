@@ -2,12 +2,10 @@ package com.hansol.restfulwebservice;
 
 import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-
 @SpringBootTest
-class RestfulWebServiceDemoApplicationTests {
-
+public class RestfulWebServiceDemoApplicatiopTests {
     @Test
-    void contextLoads() {
-    }
+    public void contextLoads() {
 
+    }
 }
