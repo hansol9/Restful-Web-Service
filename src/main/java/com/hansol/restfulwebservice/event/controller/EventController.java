@@ -2,6 +2,7 @@ package com.hansol.restfulwebservice.event.controller;
 
 import com.hansol.restfulwebservice.event.Event;
 import com.hansol.restfulwebservice.event.EventDto;
+import com.hansol.restfulwebservice.event.EventValidator;
 import com.hansol.restfulwebservice.event.repository.EventRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.hateoas.MediaTypes;
@@ -26,13 +27,23 @@ public class EventController {
 
     private final ModelMapper modelMapper;
 
-    public EventController(EventRepository eventRepository, ModelMapper modelMapper) {
+    private final EventValidator eventValidator;
+
+    public EventController(EventRepository eventRepository, ModelMapper modelMapper, EventValidator eventValidator) {
         this.eventRepository = eventRepository;
         this.modelMapper = modelMapper;
+        this.eventValidator = eventValidator;
     }
 
     @PostMapping
     public ResponseEntity createEvent(@RequestBody @Valid EventDto eventDto, Errors errors) {
+        // check empty input
+        if(errors.hasErrors()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        // check wrong input
+        eventValidator.validate(eventDto, errors);
         if(errors.hasErrors()) {
             return ResponseEntity.badRequest().build();
         }
