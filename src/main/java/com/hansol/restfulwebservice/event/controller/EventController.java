@@ -1,5 +1,6 @@
 package com.hansol.restfulwebservice.event.controller;
 
+import com.hansol.restfulwebservice.common.ErrorsResource;
 import com.hansol.restfulwebservice.event.*;
 import com.hansol.restfulwebservice.event.repository.EventRepository;
 import org.modelmapper.ModelMapper;
@@ -45,13 +46,13 @@ public class EventController {
     public ResponseEntity createEvent(@RequestBody @Valid EventDto eventDto, Errors errors) {
         // check empty input
         if(errors.hasErrors()) {
-            return ResponseEntity.badRequest().body(errors);
+            return badRequest(errors);
         }
 
         // check wrong input
         eventValidator.validate(eventDto, errors);
         if(errors.hasErrors()) {
-            return ResponseEntity.badRequest().body(errors);
+            return badRequest(errors);
         }
 
         Event event = modelMapper.map(eventDto, Event.class);
@@ -69,5 +70,9 @@ public class EventController {
         eventResource.add(new Link("/docs/index.html#resources-events-create").withRel("profile"));
         return ResponseEntity.created(createUri).body(eventResource);
 
+    }
+
+    private ResponseEntity badRequest(Errors errors) {
+        return ResponseEntity.badRequest().body(new ErrorsResource(errors));
     }
 }
