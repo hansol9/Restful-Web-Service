@@ -1,5 +1,6 @@
 package com.hansol.restfulwebservice.event;
 
+import com.hansol.restfulwebservice.event.accounts.Account;
 import lombok.*;
 
 import javax.persistence.*;
@@ -31,6 +32,9 @@ public class Event {
 
     @Enumerated(EnumType.STRING)
     private EventStatus eventStatus = EventStatus.DRAFT;
+
+    @ManyToOne
+    private Account manager;
 
     public void update() {
 
