@@ -13,10 +13,4 @@ public class RestfulWebServiceDemoApplication {
 
         SpringApplication.run(RestfulWebServiceDemoApplication.class, args);
     }
-
-    @Bean
-    public ModelMapper modelMapper() {
-        return new ModelMapper();
-    }
-
 }
