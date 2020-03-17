@@ -3,6 +3,7 @@ package com.hansol.restfulwebservice.event;
 import com.fasterxml.jackson.core.JsonParser;
 import com.hansol.restfulwebservice.common.BaseControllerTest;
 import com.hansol.restfulwebservice.common.TestDescription;
+import com.hansol.restfulwebservice.configs.AppProperties;
 import com.hansol.restfulwebservice.event.accounts.Account;
 import com.hansol.restfulwebservice.event.accounts.AccountRepository;
 import com.hansol.restfulwebservice.event.accounts.AccountRole;
@@ -42,6 +43,9 @@ public class EventControllerTests extends BaseControllerTest {
 
     @Autowired
     AccountRepository accountRepository;
+
+    @Autowired
+    AppProperties appProperties;
 
     @Before
     public void setUp() {
@@ -137,23 +141,18 @@ public class EventControllerTests extends BaseControllerTest {
 
     private String getBearerToken() throws Exception {
         // Given
-        String username = "keeun@email.com";
-        String password = "keesun";
         Account account = Account.builder()
-                .email(username)
-                .password(password)
+                .email(appProperties.getUserUsername())
+                .password(appProperties.getUserPassword())
                 .roles(Set.of(AccountRole.ADMIN, AccountRole.USER))
                 .build();
 
         this.accountService.saveAccount(account);
 
-        String clientId = "myApp";
-        String clientSecret = "pass";
-
         ResultActions perform = this.mockMvc.perform(post("/oauth/token")
-                .with(httpBasic(clientId, clientSecret))
-                .param("username", username)
-                .param("password", password)
+                .with(httpBasic(appProperties.getClientId(), appProperties.getClientSecret()))
+                .param("username", appProperties.getUserUsername())
+                .param("password", appProperties.getUserPassword())
                 .param("grant_type", "password"));
 
         var responseBody = perform.andReturn().getResponse().getContentAsString();
