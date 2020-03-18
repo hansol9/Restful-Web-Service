@@ -1,6 +1,8 @@
 package com.hansol.restfulwebservice.event;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.hansol.restfulwebservice.event.accounts.Account;
+import com.hansol.restfulwebservice.event.accounts.AccountSerializer;
 import lombok.*;
 
 import javax.persistence.*;
@@ -34,6 +36,7 @@ public class Event {
     private EventStatus eventStatus = EventStatus.DRAFT;
 
     @ManyToOne
+    @JsonSerialize(using = AccountSerializer.class)
     private Account manager;
 
     public void update() {
